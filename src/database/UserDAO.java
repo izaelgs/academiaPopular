@@ -1,0 +1,62 @@
+package database;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+import modelos.User;
+
+public class UserDAO {	
+	
+	public static void insertUser(User u) throws SQLException {
+		Connection conexao = Fabrica.getConexao();		
+		
+		String sql = "INSERT INTO user(status, nome, login, senha, email, telefone, cpf) VALUES (1, ?, ?, ?, ?, ?, ?)";
+		
+		PreparedStatement stmt = conexao.prepareStatement(sql);		
+		stmt.setString(1, u.nome);
+		stmt.setString(2, u.login);
+		stmt.setString(3, u.senha);
+		stmt.setString(4, u.email);
+		stmt.setString(5, u.telefone);
+		stmt.setString(6, u.cpf);		
+		
+		stmt.execute();
+		
+		System.out.println("usuario inserido com sucesso");
+		conexao.close();
+	}
+	
+	public static User gettUser(int id_q) throws SQLException {
+		Connection conexao = Fabrica.getConexao();		
+		
+		String sql = "SELECT * FROM user WHERE id =" + id_q;
+		
+		Statement stmt = conexao.createStatement();		
+		ResultSet r = stmt.executeQuery(sql);		
+		
+		int id = 0, status = 0;
+		String login = null, senha = null, email = null, telefone = null, nome = null, cpf = null, url = null;
+		
+		if(r != null && r.next()){
+            id = r.getInt("id");
+			status = r.getInt("status");
+			login = r.getString("login");
+			senha = r.getString("senha");
+			email = r.getString("email");
+			telefone = r.getString("telefone");
+			nome = r.getString("nome");
+			cpf = r.getString("cpf");
+			url = r.getString("img");
+        }		
+		
+		System.out.println("dado consultado com sucesso");
+		conexao.close();
+		
+		User user = new User(id, status, login, senha, email, telefone, nome, cpf, url);
+		
+		return user;
+	}
+}
