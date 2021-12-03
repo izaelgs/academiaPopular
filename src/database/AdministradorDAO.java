@@ -6,8 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import modelos.Administrador;
-import modelos.Professor;
+import modelos.Administrador;;
 
 public class AdministradorDAO {
 	public static void insertAdministrador(Administrador a) throws SQLException {

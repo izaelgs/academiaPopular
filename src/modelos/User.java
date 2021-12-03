@@ -30,5 +30,9 @@ public class User {
 		this.cpf = cpf;
 		this.url = url;
 	}
+
+	public int getId() {
+		return id;
+	}
 	
 }
