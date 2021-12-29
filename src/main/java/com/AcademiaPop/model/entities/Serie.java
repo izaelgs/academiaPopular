@@ -5,7 +5,11 @@ public class Serie {
 	public int progresso;
 	public String titulo;
 	public String descricao;
-
+	
+	public Serie() {
+		
+	}
+	
 	public Serie(int progresso, String titulo, String descricao) {		
 		this.progresso = progresso;
 		this.titulo = titulo;

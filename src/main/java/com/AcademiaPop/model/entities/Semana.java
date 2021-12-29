@@ -4,6 +4,10 @@ public class Semana {
 	int id;
 	public int id_aluno;
 	public int id_professor;
+	
+	public Semana() {				
+	}
+	
 	public Semana(String login, String senha, String email, String telefone, String nome, String cpf) {				
 	}
 	
@@ -24,5 +28,13 @@ public class Semana {
 	
 	public int getId_professor() {
 		return id_professor;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 }

@@ -26,6 +26,22 @@ public class ProfessorDAO {
 		
 	}
 	
+	public static void updateProfessor(Professor p) throws SQLException {
+		Connection conexao = Factory.getConexao();		
+		
+		UserDAO.insertUser(p);		
+					
+		String sql = "UPDATE user SET nome = 'nomeUpdate'  WHERE id = 1";
+				
+		PreparedStatement stmt = conexao.prepareStatement(sql);				
+		
+		stmt.execute();
+		
+		System.out.println("professor inserido com sucesso");
+		conexao.close();
+		
+	}
+	
 	public static Professor getProfessor(int id_q) throws SQLException {
 		Connection conexao = Factory.getConexao();		
 		

@@ -9,6 +9,7 @@ import java.sql.Statement;
 import com.AcademiaPop.model.entities.Semana;
 
 public class SemanaDAO {
+	
 	public static void insertSemana(Semana s) throws SQLException {
 		Connection conexao = Factory.getConexao();					
 					
@@ -23,6 +24,23 @@ public class SemanaDAO {
 		System.out.println("Semana inserida com sucesso");
 		conexao.close();
 		
+	}
+	
+	public static void updateSemana(Semana s) throws SQLException {
+		Connection conexao = Factory.getConexao();
+		
+		String sql = "UPDATE semana SET id_aluno = ?, id_professor = ? WHERE id = ?";
+		
+		PreparedStatement stmt = conexao.prepareStatement(sql);
+				
+		stmt.setInt(1, s.id_aluno);
+		stmt.setInt(2, s.id_professor);
+		stmt.setInt(3, s.getId());
+		
+		stmt.execute();
+		
+		System.out.println("semana atualizada com sucesso");
+		conexao.close();
 	}
 	
 	public static Semana getSemana(int id_q) throws SQLException {

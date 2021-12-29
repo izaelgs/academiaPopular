@@ -26,6 +26,24 @@ public class SerieDAO {
 		
 	}
 	
+	public static void updateSerie(Serie s) throws SQLException {
+		Connection conexao = Factory.getConexao();		
+		
+		String sql = "UPDATE serie SET titulo = ?, descricao = ?,progresso = ? WHERE id = ?";
+		
+		PreparedStatement stmt = conexao.prepareStatement(sql);		
+				
+		stmt.setString(1, s.titulo);
+		stmt.setString(2, s.descricao);
+		stmt.setInt(3, s.progresso);
+		stmt.setInt(4, s.getId());
+		
+		stmt.execute();
+		
+		System.out.println("serie atualizada com sucesso");
+		conexao.close();
+	}
+	
 	public static Serie getSerie(int id_q) throws SQLException {
 		Connection conexao = Factory.getConexao();		
 		

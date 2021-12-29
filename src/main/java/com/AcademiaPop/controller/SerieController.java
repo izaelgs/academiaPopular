@@ -10,27 +10,28 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.AcademiaPop.model.database.UserDAO;
-import com.AcademiaPop.model.entities.User;
+import com.AcademiaPop.model.database.SerieDAO;
+import com.AcademiaPop.model.entities.Serie;
 
 @RestController
-@RequestMapping("/user")
-public class UserController {
+@RequestMapping("/serie")
+public class SerieController {
+	
 	@GetMapping("/{id}")
-	public User obterUser(@PathVariable int id) throws SQLException {
-		User user = UserDAO.gettUser(id);
-		return user;
+	public Serie getSerie(@PathVariable int id) throws SQLException {		
+		Serie serie = SerieDAO.getSerie(id);
+		return serie;
 	}
 	
 	@RequestMapping(method = RequestMethod.POST, value = "/insert")
-	public User insertDia(@RequestBody User user){
-		//UserDAO.insertUser(user);		
-		return user;
+	public Serie insertSerie(@RequestBody Serie serie) throws SQLException {
+		SerieDAO.insertSerie(serie);
+		return serie;
 	}
 	
 	@PutMapping("/update")
-	public User updateUser(@RequestBody User user) throws SQLException{
-		UserDAO.updateUser(user);		
-		return user;
+	public Serie updateSerie(@RequestBody Serie serie) throws SQLException {
+		SerieDAO.updateSerie(serie);
+		return serie;
 	}
 }

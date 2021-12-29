@@ -9,6 +9,7 @@ import java.sql.Statement;
 import com.AcademiaPop.model.entities.Administrador;
 
 public class AdministradorDAO {
+	
 	public static void insertAdministrador(Administrador a) throws SQLException {
 		Connection conexao = Factory.getConexao();		
 		

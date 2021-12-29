@@ -9,6 +9,7 @@ import java.sql.Statement;
 import com.AcademiaPop.model.entities.Dia;
 
 public class DiaDAO {
+	
 	public static void insertDia(Dia d) throws SQLException {
 		Connection conexao = Factory.getConexao();					
 					
