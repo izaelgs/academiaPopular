@@ -9,19 +9,25 @@ import java.sql.Statement;
 import com.AcademiaPop.model.entities.Aluno;
 
 public class AlunoDAO {
-	public static void insertAluno(Aluno a) throws SQLException {
-		Connection conexao = Factory.getConexao();		
+	public static boolean insertAluno(Aluno a) throws SQLException {
+		Connection conexao = Factory.getConexao();	
 		
-		UserDAO.insertUser(a);		
+		boolean auth = false;
+		
+		if(UserDAO.insertUser(a)) {	
+						
+			String sql = "INSERT into aluno(id_user) SELECT id FROM user WHERE login = '"+a.login+"'";
 					
-		String sql = "INSERT into aluno(id_user) SELECT id FROM user WHERE login = '"+a.login+"'";
-				
-		PreparedStatement stmt = conexao.prepareStatement(sql);				
-		
-		stmt.execute();
-		
-		System.out.println("aluno inserido com sucesso");
+			PreparedStatement stmt = conexao.prepareStatement(sql);				
+			
+			stmt.execute();
+			
+			System.out.println("aluno inserido com sucesso");
+			auth = true;
+		}
 		conexao.close();
+		
+		return auth;
 		
 	}
 	

@@ -6,6 +6,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import com.AcademiaPop.model.entities.Aluno;
+import com.AcademiaPop.model.entities.Professor;
 import com.AcademiaPop.model.entities.User;
 
 
@@ -21,7 +23,7 @@ public class UserDAO {
 			PreparedStatement stmt = conexao.prepareStatement(sql);		
 			stmt.setString(1, u.nome);
 			stmt.setString(2, u.login);
-			stmt.setString(3, u.senha);
+			stmt.setString(3, u.getSenha());
 			stmt.setString(4, u.email);
 			stmt.setString(5, u.telefone);
 			stmt.setString(6, u.cpf);		
@@ -44,7 +46,7 @@ public class UserDAO {
 		PreparedStatement stmt = conexao.prepareStatement(sql);		
 		stmt.setString(1, u.nome);
 		stmt.setString(2, u.login);
-		stmt.setString(3, u.senha);
+		stmt.setString(3, u.getSenha());
 		stmt.setString(4, u.email);
 		stmt.setString(5, u.telefone);
 		stmt.setString(6, u.cpf);
@@ -91,14 +93,16 @@ public class UserDAO {
 	
 	public static User authLogin(User user) throws SQLException {		
 		
-		Connection conexao = Factory.getConexao();		
+		Connection conexao = Factory.getConexao();	
+		User user_r = null;
 		
-		String sql = "SELECT * FROM user WHERE login = '"+ user.login +"' AND senha = '"+user.senha+"'";
+		//String sql = "SELECT * FROM user WHERE login = '"+ user.login +"' AND senha = '"+user.senha+"'";
+		String sql = "SELECT (SELECT id FROM aluno WHERE id_user = u.id) as id_aluno,(SELECT id FROM professor WHERE id_user = u.id) as id_professor,u.* FROM user u WHERE login = '"+ user.login +"' AND senha = '"+user.getSenha()+"'";
 		
 		Statement stmt = conexao.createStatement();		
-		ResultSet r = stmt.executeQuery(sql);		
+		ResultSet r = stmt.executeQuery(sql);
 		
-		int id = 0, status = 0;
+		int id = 0, status = 0,id_req = 0;
 		String login = null, senha = null, email = null, telefone = null, nome = null, cpf = null, url = null;
 		
 		if(r != null && r.next()){
@@ -111,13 +115,22 @@ public class UserDAO {
 			nome = r.getString("nome");
 			cpf = r.getString("cpf");
 			url = r.getString("img");
-        }
-	
+			if(status == 3) {
+				user_r = new User(3,status, id, login, senha, email, telefone, nome, cpf, url);
+			}else{
+				if(r.getInt("id_aluno") > 0){
+					id_req = r.getInt("id_aluno");
+					user_r = new Aluno(1,id_req, id, status, login, senha, email, telefone, nome, cpf, url);
+				}else if(r.getInt("id_professor") > 0){
+					id_req = r.getInt("id_professor");
+					user_r = new Professor(2, id_req, id, status, login, senha, email, telefone, nome, cpf, url);
+				}
+			}
+        }	
+		
 			System.out.println("dado consultado com sucesso");
 			conexao.close();
 			
-			User user_r = new User(status, id, login, senha, email, telefone, nome, cpf, url);
-			System.out.println(user_r.status);
 			return user_r;
 	}
 	
