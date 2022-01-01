@@ -1,6 +1,7 @@
 package com.AcademiaPop.model.entities;
 
 public class User {
+	public int status;
 	public String login;
 	public String senha;
 	public String email;
@@ -9,7 +10,6 @@ public class User {
 	public String cpf;
 	public String img;	
 	private int id;
-	public int status;
 	
 	public User(String login, String senha, String email, String telefone, String nome, String cpf) {		
 		this.login = login;
@@ -21,6 +21,7 @@ public class User {
 	}
 	
 	public User(int status, int id, String login, String senha, String email, String telefone, String nome, String cpf, String img) {	
+		this.status = status;
 		this.id = id;
 		this.login = login;
 		this.senha = senha;

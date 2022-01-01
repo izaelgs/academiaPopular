@@ -3,7 +3,9 @@ package com.AcademiaPop.controller;
 import java.sql.SQLException;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,14 +17,21 @@ import com.AcademiaPop.model.entities.Dia;
 @RequestMapping("/dia")
 public class DiaController {
 	
-	@GetMapping(path="/qualquer")
-	public Dia obterCliente() {
-		return new Dia(1, 1, 0);
+	@GetMapping(path="/{id}")
+	public Dia getDia(@PathVariable int id) throws SQLException {
+		Dia dia = DiaDAO.getDia(id);
+		return dia;
 	}
 	
 	@PostMapping("/insert")
-	public Dia insertDia(@RequestBody Dia dia) throws SQLException{
+	public String insertDia(@RequestBody Dia dia) throws SQLException{
 		DiaDAO.insertDia(dia);		
-		return dia;
+		return "dia inserido com sucesso";
+	}
+	
+	@PutMapping("/update")
+	public String updateData(@RequestBody Dia dia) throws SQLException {
+		DiaDAO.updateDia(dia);
+		return "dia atualizado com sucesso";
 	}
 }

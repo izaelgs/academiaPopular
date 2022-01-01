@@ -30,9 +30,9 @@ public class ProfessorController {
 	}
 	
 	@PostMapping("/insert")
-	public Professor insertProfessor(@RequestBody Professor professor) throws SQLException{
+	public String insertProfessor(@RequestBody Professor professor) throws SQLException{
 		ProfessorDAO.insertProfessor(professor);		
-		return professor;
+		return "Professor inserido com sucesso";
 	}
 	
 	@PutMapping("/update")

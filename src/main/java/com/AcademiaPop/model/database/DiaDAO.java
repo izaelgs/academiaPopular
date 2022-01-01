@@ -27,6 +27,24 @@ public class DiaDAO {
 		
 	}
 	
+	public static void updateDia(Dia d) throws SQLException {
+		Connection conexao = Factory.getConexao();					
+					
+		String sql = "UPDATE dia SET id_serie = ?, id_semana = ?, dia = ? WHERE id = ?";
+				
+		PreparedStatement stmt = conexao.prepareStatement(sql);
+		stmt.setInt(1, d.id_serie);
+		stmt.setInt(2, d.id_semana);
+		stmt.setInt(3, d.dia);
+		stmt.setInt(4, d.getId());
+		
+		stmt.execute();
+		
+		System.out.println("Dia atualizado com sucesso");
+		conexao.close();
+		
+	}
+	
 	public static Dia getDia(int id_q) throws SQLException {
 		Connection conexao = Factory.getConexao();		
 		

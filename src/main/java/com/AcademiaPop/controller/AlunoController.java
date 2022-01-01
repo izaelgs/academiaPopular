@@ -28,8 +28,8 @@ public class AlunoController {
 	}
 	
 	@PostMapping("/insert")
-	public Aluno insertAluno(@RequestBody Aluno aluno) throws SQLException{
+	public String insertAluno(@RequestBody Aluno aluno) throws SQLException{
 		AlunoDAO.insertAluno(aluno);		
-		return aluno;
+		return "Aluno inserido com sucesso";
 	}
 }
