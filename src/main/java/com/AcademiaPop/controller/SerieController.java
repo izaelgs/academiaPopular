@@ -1,6 +1,7 @@
 package com.AcademiaPop.controller;
 
 import java.sql.SQLException;
+import java.util.List;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,9 +24,27 @@ public class SerieController {
 		return serie;
 	}
 	
+	@GetMapping("/exercicios/{id}")
+	public Serie getSerieExercicios(@PathVariable int id) throws SQLException {		
+		Serie serie = SerieDAO.getSerieExercicios(id);
+		return serie;
+	}
+	
+	@GetMapping("/recentes")
+	public List<Serie> getSerie() throws SQLException {		
+		List<Serie> serie = SerieDAO.getSerieRecentes();
+		return serie;
+	}
+	
 	@RequestMapping(method = RequestMethod.POST, value = "/insert")
 	public Serie insertSerie(@RequestBody Serie serie) throws SQLException {
 		SerieDAO.insertSerie(serie);
+		return serie;
+	}
+	
+	@RequestMapping(method = RequestMethod.POST, value = "exercicio/insert")
+	public Serie insertSerieExercicio(@RequestBody Serie serie) throws SQLException {
+		SerieDAO.insertSerieExercicio(serie);
 		return serie;
 	}
 	

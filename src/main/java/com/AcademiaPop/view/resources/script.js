@@ -42,37 +42,42 @@ function login_btn() {
     let modulo = "";
 
     data = login(login_str, senha_str)
-    user = JSON.parse(data)
 
-    switch(user.modulo){
-        case 1:
-            modulo = "aluno";
-            break;
-        case 2:
-            modulo = "professor";
-            break;
-        case 3:
-            modulo = "admin";
-            break;
-    }
+    if(data != ""){
+            
+        user = JSON.parse(data)
 
-    console.log("modulo: "+modulo+", status: "+user.status)
-    
-    if(user.status == 1 || user.status == 3){
-        alert("login bem Sucedido!")
-        sessionStorage.setItem("user", JSON.stringify(user))
+        switch(user.modulo){
+            case 1:
+                modulo = "aluno";
+                break;
+            case 2:
+                modulo = "professor";
+                break;
+            case 3:
+                modulo = "admin";
+                break;
+        }
 
-        window.location.href = "../"+modulo
-    }else if(user.status == 2){
-        alert("login bem Sucedido!")
+        console.log("modulo: "+modulo+", status: "+user.status)
+        
+        if(user.status == 1 || user.status == 3){
+            //alert("login bem Sucedido!")
+            sessionStorage.setItem("user", JSON.stringify(user))
 
-        sessionStorage.setItem("user", JSON.stringify(user))
+            window.location.href = "../"+modulo
+        }else if(user.status == 2){
+            alert("login bem Sucedido!")
 
-        window.location.href = "../cadastro.html"
+            sessionStorage.setItem("user", JSON.stringify(user))
+
+            window.location.href = "../cadastro.html"
+        }else{
+            alert("erro ao coisar a coisa!")
+        }
     }else{
         alert("login ou usuário incorretos!")
     }
-    //alert("login: "+login+", senha: "+senha);
 }
 
 function register_btn(){

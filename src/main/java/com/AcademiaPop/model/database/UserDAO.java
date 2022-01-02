@@ -128,7 +128,7 @@ public class UserDAO {
 			}
         }	
 		
-			System.out.println("dado consultado com sucesso");
+			System.out.println(user_r.img);
 			conexao.close();
 			
 			return user_r;
