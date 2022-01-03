@@ -10,6 +10,8 @@ public class Exercicio {
 	}
 	
 	public Exercicio(int id_e, String titulo_e, String desc_e) {
-		// TODO Auto-generated constructor stub
+		this.id = id_e;
+		this.titulo = titulo_e;
+		this.descricao = desc_e;
 	}
 }

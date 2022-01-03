@@ -5,8 +5,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
+import com.AcademiaPop.model.entities.Dia;
 import com.AcademiaPop.model.entities.Semana;
+import com.AcademiaPop.model.entities.Serie;
 
 public class SemanaDAO {
 	
@@ -65,6 +69,50 @@ public class SemanaDAO {
 		
 		Semana semana = new Semana(id, id_aluno, id_professor);
 		
+		return semana;
+	}
+	
+	public static Semana getSemanaAluno(int id_q) throws SQLException {
+		Connection conexao = Factory.getConexao();		
+		
+		String sql = "SELECT s.id,s.id_professor,s.id_aluno,d.id as idDia, d.id_serie,d.dia\r\n"
+				+ "FROM semana s JOIN dia d ON s.id = d.id_semana\r\n"
+				+ "WHERE s.id_aluno =" + id_q+ " ORDER BY d.dia";
+		
+		Statement stmt = conexao.createStatement();	
+		
+		
+		ResultSet r = stmt.executeQuery(sql);		
+		
+		int id = 0,id_aluno = 0,id_professor = 0,idDia = 0,id_serie = 0,dia= 0;		
+        List<Dia> dias = new ArrayList<Dia>();
+
+		while(r != null && r.next()){
+            id = r.getInt("id");
+            id_aluno = r.getInt("id_aluno");
+            id_professor = r.getInt("id_professor");
+            
+            idDia = r.getInt("idDia");
+            id_serie = r.getInt("id_serie");
+            dia = r.getInt("dia");
+            
+    		List<Serie> series = new ArrayList<Serie>();
+
+            Serie serie = SerieDAO.getSerieExercicios(id_serie);
+            
+            series.add(serie);
+            
+            Dia dia_o = new Dia(idDia,id_serie,id,dia,series);
+    		System.out.println(idDia);
+            dias.add(dia_o);
+        }			
+		
+		conexao.close();
+								
+		Semana semana = new Semana(id, id_aluno, id_professor,dias);
+
+		System.out.println(semana.getId());
+
 		return semana;
 	}
 }

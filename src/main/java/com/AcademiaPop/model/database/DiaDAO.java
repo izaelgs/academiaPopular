@@ -5,8 +5,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.AcademiaPop.model.entities.Dia;
+import com.AcademiaPop.model.entities.Serie;
 
 public class DiaDAO {
 	
@@ -67,6 +70,44 @@ public class DiaDAO {
 		conexao.close();
 		
 		Dia dia_o = new Dia(id, id_serie, id_semana, dia);
+		
+		return dia_o;
+	}
+	
+	public static Dia getDiaSerie(int aluno,int id_q) throws SQLException {
+		
+			
+		Connection conexao = Factory.getConexao();		
+		
+		String sql1 = "SELECT * FROM dia WHERE id =" + id_q;
+		
+		Statement stmt1 = conexao.createStatement();	
+		
+		
+		ResultSet rs = stmt1.executeQuery(sql1);		
+		
+		List<Serie> series = new ArrayList<Serie>();
+
+		
+		int id = 0,id_serie = 0,id_semana = 0, dia = 0;	
+		
+		while(rs != null && rs.next()){
+            id = rs.getInt("id");
+            id_serie = rs.getInt("id_serie");
+            id_semana = rs.getInt("id_semana");			
+            dia = rs.getInt("dia");	
+            
+            Serie serie = SerieDAO.getSerieExercicios(id_serie);
+            
+            series.add(serie);
+            
+    		System.out.println(id_serie);
+
+        }			
+		
+		conexao.close();
+		
+		Dia dia_o = new Dia(id, id_serie, id_semana, dia, series);
 		
 		return dia_o;
 	}

@@ -65,7 +65,7 @@ public class SerieDAO {
 		for (Exercicio exercicio : exercicios) {
 			
 			insertExercicio(exercicio);
-			String sql = "INSERT into controle_serie(id_serie, id_ex) VALUES(?, (SELECT LAST_INSERT_ID()))";
+			String sql = "INSERT into controle_serie(id_serie, id_ex) VALUES(?, (SELECT MAX(id) FROM exercicio))";
 			
 			PreparedStatement stmt = conexao.prepareStatement(sql);
 			stmt.setInt(1, s.getId());
@@ -140,32 +140,31 @@ public class SerieDAO {
 		int id = 0,id_e = 0;
 		String titulo = null,descricao = null, titulo_e = null, desc_e = null;		
 		
-		if (r.next()) {
-			while(r != null && r.next()){ 
-            id_e = r.getInt("id_e");
-            titulo_e = r.getString("titulo_e");			
-            desc_e = r.getString("desc_e");
-            
-            Exercicio exercicio = new Exercicio(id_e,titulo_e,desc_e);
-            
-            exercicios.add(exercicio);
-			}		    
+		//if (r.next()) {
+		while(r != null && r.next()){ 
+	        id_e = r.getInt("id_e");
+	        titulo_e = r.getString("titulo_e");	   		
+	        desc_e = r.getString("desc_e");
+	                
+	        Exercicio ex = new Exercicio(id_e,titulo_e,desc_e);
+	        
+	        exercicios.add(ex);
+				//}		    
 		
+			id = r.getInt("id");
+	        titulo = r.getString("titulo");			
+	        descricao = r.getString("descricao");
+	        		
+		}
 		
-		
-		
-		id = r.getInt("id");
-        titulo = r.getString("titulo");			
-        descricao = r.getString("descricao");
-        		
-		conexao.close();
-		
+		conexao.close();		
+
 		Serie serie = new Serie(id, titulo, descricao, exercicios);
 		return serie;
-		} else {
+		/* else {
 			Serie serie = new Serie(0, null, null, null);
 			return serie;
-		}
+		}*/
 		
 	}
 	

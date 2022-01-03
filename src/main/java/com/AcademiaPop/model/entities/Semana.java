@@ -1,9 +1,12 @@
 package com.AcademiaPop.model.entities;
 
+import java.util.List;
+
 public class Semana {
 	int id;
 	public int id_aluno;
 	public int id_professor;
+	public List<Dia> dias;
 	
 	public Semana() {				
 	}
@@ -15,6 +18,13 @@ public class Semana {
 		this.id = id;
 		this.id_aluno = id_aluno;
 		this.id_professor = id_professor;
+	}
+	
+	public Semana(int id, int id_aluno, int id_professor, List<Dia> dias) {		
+		this.id = id;
+		this.id_aluno = id_aluno;
+		this.id_professor = id_professor;
+		this.dias = dias;
 	}
 	
 	public Semana(int id_aluno, int id_professor) {		

@@ -23,6 +23,12 @@ public class SemanaController {
 		return semana;
 	}
 	
+	@GetMapping("/aluno/{id}")
+	public Semana getSemanaAluno(@PathVariable int id) throws SQLException {
+		Semana semana = SemanaDAO.getSemanaAluno(id);
+		return semana;
+	}
+	
 	@PostMapping("/insert")
 	public Semana insertSemana(@RequestBody Semana semana) throws SQLException{
 		SemanaDAO.insertSemana(semana);		
