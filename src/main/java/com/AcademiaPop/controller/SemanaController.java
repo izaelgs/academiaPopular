@@ -1,6 +1,7 @@
 package com.AcademiaPop.controller;
 
 import java.sql.SQLException;
+import java.util.List;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,6 +27,12 @@ public class SemanaController {
 	@GetMapping("/aluno/{id}")
 	public Semana getSemanaAluno(@PathVariable int id) throws SQLException {
 		Semana semana = SemanaDAO.getSemanaAluno(id);
+		return semana;
+	}
+	
+	@GetMapping("/professor/{id}")
+	public List<Semana> getSemanaAlunos(@PathVariable int id) throws SQLException {
+		List<Semana> semana = SemanaDAO.getSemanaAlunos(id);
 		return semana;
 	}
 	

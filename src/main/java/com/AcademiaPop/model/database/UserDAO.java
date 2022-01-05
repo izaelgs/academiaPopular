@@ -41,7 +41,7 @@ public class UserDAO {
 	public static void updateUser(User u) throws SQLException {
 		Connection conexao = Factory.getConexao();		
 		
-		String sql = "UPDATE user SET nome = ?,login = ?,senha = ?,email = ?,telefone = ?,cpf = ?,img = ?,status = ?  WHERE id = ?";
+		String sql = "UPDATE user SET nome = ?,login = ?,senha = ?,email = ?,telefone = ?,cpf = ?  WHERE id = ?";
 		
 		PreparedStatement stmt = conexao.prepareStatement(sql);		
 		stmt.setString(1, u.nome);
@@ -49,10 +49,8 @@ public class UserDAO {
 		stmt.setString(3, u.getSenha());
 		stmt.setString(4, u.email);
 		stmt.setString(5, u.telefone);
-		stmt.setString(6, u.cpf);
-		stmt.setString(7, u.img);
-		stmt.setInt(8, u.status);
-		stmt.setInt(9, u.getId());
+		stmt.setString(6, u.cpf);		
+		stmt.setInt(7, u.getId());
 		
 		stmt.execute();
 		
@@ -128,7 +126,7 @@ public class UserDAO {
 			}
         }	
 		
-			System.out.println(user_r.img);
+			//System.out.println(user_r.img);
 			conexao.close();
 			
 			return user_r;

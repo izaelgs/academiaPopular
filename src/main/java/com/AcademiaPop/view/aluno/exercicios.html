@@ -17,11 +17,12 @@
 
     <script src="../resources/script.js"></script>
     <script src="../resources/aluno.js"></script>
-    <script src="/aluno/resources/index.js"></script>
+    <script src="/aluno/resources/exercicios.js"></script>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>   
 
     <link rel="stylesheet" href="../resources/style.css">
     <link rel="stylesheet" href="/aluno/resources/index.css">
+    <link rel="stylesheet" href="/aluno/resources/modal.css">
 
     <link rel="icon" href="Favicon.png">
 
@@ -58,7 +59,7 @@
     <nav id="navbar" class="nav-menu">
         <ul class="nav flex-column">
             <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="#inicio"><i class="bi bi-house"></i> Homer</a>
+                <a class="nav-link active" aria-current="page" href="../aluno/"><i class="bi bi-house"></i> Homer</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="./perfil.html"><i class="bi bi-person"></i> Perfil</a>
@@ -83,21 +84,7 @@
 </aside>
 
 <main id="main">    
-    <!--<section id="sobre" class="container mt-5">
-        <div class="row w-100">
-            <div class="col-md-12">
-                <h2 class="pt-3">Desempenho</h2>
-                <div id="chart_div" style="max-width: 1280px;height: 200px;"></div>                
-            </div>
-        </div>        
-    </section> -->
-    <section class="mt-5 cv">
-        <div class="container pb-5" id="hoje">
-            <h2 class="pt-3">Meu Dia</h2>                        
-        </div>
-    </section>
-
-    <section id="porta" class="section-bg mt-5">
+    <section id="porta" class="section-bg">
         <div class="container pb-5 pt-5">
             <h2 class="pab-4">Minha Semana</h2>
             <div class="row justify-content-center mt-5" id="semana">
@@ -112,10 +99,30 @@
             </div>
         </div>
     </section>
+    <!--MODAL-->
+    <div class="modal fade" id="siteModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">Segunda Feira</h3>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <h4>Exercícios</h4>
+                    <p>paragrafo</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>    
+    </div>
+    <div id="modais">
+        
+    </div>
 </main>
-
-
-
 
 
 

@@ -115,4 +115,70 @@ public class SemanaDAO {
 
 		return semana;
 	}
+	
+	public static List<Semana> getSemanaAlunos(int id_q) throws SQLException {
+		Connection conexao = Factory.getConexao();		
+		
+		String sql = "SELECT s.id,s.id_professor,s.id_aluno,d.id as idDia, d.id_serie,d.dia\r\n"
+				+ "FROM semana s JOIN dia d ON s.id = d.id_semana\r\n"
+				+ "WHERE s.id_professor =" + id_q+ " ORDER BY d.dia";
+		
+		Statement stmt = conexao.createStatement();	
+		
+		
+		ResultSet r = stmt.executeQuery(sql);		
+		
+		int id = 0,id_aluno = 0,id_professor = 0,idDia = 0,id_serie = 0,dia= 0;		
+        List<Semana> semanas = new ArrayList<Semana>();
+        List<Dia> dias_c = new ArrayList<Dia>();
+
+		while(r != null && r.next()){
+			boolean auth = r.getInt("id") != id? true: false;
+						
+            id = r.getInt("id");
+            id_aluno = r.getInt("id_aluno");
+            id_professor = r.getInt("id_professor");
+            
+            idDia = r.getInt("idDia");
+            id_serie = r.getInt("id_serie");
+            dia = r.getInt("dia");
+            
+    		List<Serie> series = new ArrayList<Serie>();
+            Serie serie = SerieDAO.getSerieExercicios(id_serie);
+
+            series.add(serie);
+            
+            Dia dia_o = new Dia(idDia,id_serie,id,dia,series);
+			if(auth) {
+				//if(dia_o.id_semana == id) {
+		        	List<Dia> dias = new ArrayList<Dia>();
+
+		            dias.add(dia_o);
+		            dias_c.add(dia_o);
+
+					Semana semana = new Semana(id, id_aluno, id_professor,dias);
+					semanas.add(semana);
+		    		System.out.println("serie: "+id_serie);
+	
+		    		System.out.println("dia: "+dia_o.getId());
+	    		//}else {}
+				
+			}else {
+		        List<Dia> dias = new ArrayList<Dia>();
+				dias.add(dias_c.get(dias_c.size()-1));
+
+	            dias.add(dia_o);
+				Semana semana = new Semana(id, id_aluno, id_professor,dias);
+				semanas.remove(semanas.size()-1);
+				semanas.add(semana);
+	    		System.out.println("dias: "+semana.dias.size());
+
+				//System.out.println("semana: "+semana.getId());
+			}
+        }			
+		
+		conexao.close();
+				
+		return semanas;
+	}
 }
