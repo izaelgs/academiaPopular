@@ -41,6 +41,17 @@ public class User {
 		this.img = img;
 	}
 	
+	//sem senha e cpf
+	public User(int status, int id, String login, String email, String telefone, String nome, String img) {	
+		this.status = status;
+		this.id = id;
+		this.login = login;
+		this.email = email;
+		this.telefone = telefone;
+		this.nome = nome;
+		this.img = img;
+	}
+	
 	public User(int modulo,int status, int id, String login, String senha, String email, String telefone, String nome, String cpf, String img) {	
 		this.status = status;
 		this.id = id;

@@ -15,9 +15,12 @@ import com.AcademiaPop.model.entities.Aluno;
 @RestController
 @RequestMapping("/aluno")
 public class AlunoController {
-	@GetMapping(path="/qualquer")
-	public Aluno obterCliente() {
-		return new Aluno("login.pica", "senha_forte", "email@brabo", "40028922", "meuNomeEhJhon", "16656747854");
+	@GetMapping("/get/{id}")
+	public Aluno obterAlunoP(@PathVariable int id) throws SQLException {
+		Aluno aluno = AlunoDAO.getAluno2(id);
+		System.out.println("id: "+ id +"; aluno: "+ aluno.nome);
+		Aluno ra = new Aluno(aluno.getId(), aluno.status,aluno.login, aluno.email, aluno.telefone, aluno.nome, aluno.img);
+		return ra;
 	}
 	
 	@GetMapping("/{id}")

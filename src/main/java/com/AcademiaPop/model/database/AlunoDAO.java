@@ -63,4 +63,36 @@ public class AlunoDAO {
 		
 		return aluno;
 	}
+	
+	public static Aluno getAluno2(int id_q) throws SQLException {		
+		Connection conexao = Factory.getConexao();		
+		
+		String sql = "SELECT a.id, a.id_user, u.nome, u.login, u.senha, u.email, u.telefone, u.cpf, u.img, u.status FROM user u INNER JOIN aluno a ON u.id = a.id_user WHERE a.id =" + id_q;
+		
+		Statement stmt = conexao.createStatement();	
+		
+		
+		ResultSet r = stmt.executeQuery(sql);		
+		
+		int id = 0,id_user = 0,status = 0;
+		String login = null, senha = null, email = null, telefone = null, nome = null, cpf = null, img = null;
+		
+		if(r != null && r.next()){
+            id = r.getInt("id");
+            id_user = r.getInt("id_user");
+			status = r.getInt("status");
+			login = r.getString("login");
+			senha = r.getString("senha");
+			email = r.getString("email");
+			telefone = r.getString("telefone");
+			nome = r.getString("nome");
+			cpf = r.getString("cpf");
+			img = r.getString("img");
+        }		
+		System.out.println(id_user);
+		conexao.close();
+		
+		Aluno aluno = new Aluno(id, id_user, status, login, senha, email, telefone, nome, cpf, img);
+		return aluno;
+	}
 }
