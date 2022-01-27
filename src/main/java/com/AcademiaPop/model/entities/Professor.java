@@ -12,6 +12,11 @@ public class Professor extends User{
 		super(login, senha, email, telefone, nome, cpf);		
 	}
 	
+	public Professor(int id, String nome, String url) {
+		super(nome, url);
+		this.id = id;
+	}
+	
 	public Professor(int id, int id_user, int status,String login, String senha, String email, String telefone, String nome, String cpf, String url) {
 		super(status, id, login, senha, email, telefone, nome, cpf, url);
 		this.id = id;

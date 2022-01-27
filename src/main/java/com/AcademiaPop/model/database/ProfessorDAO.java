@@ -74,4 +74,35 @@ public class ProfessorDAO {
 		
 		return professor;
 	}
+	
+	public static Professor getProfessorAluno(int id_q) throws SQLException {
+		Connection conexao = Factory.getConexao();		
+		
+		String sql = "SELECT p.id, u.nome, u.img\r\n"
+				+ "FROM user u INNER \r\n"
+				+ "JOIN professor p ON u.id = p.id_user \r\n"
+				+ "JOIN semana s ON p.id = s.id_professor\r\n"
+				+ "JOIN aluno a ON s.id_aluno = a.id\r\n"
+				+ "WHERE a.id =" + id_q;
+		
+		Statement stmt = conexao.createStatement();	
+		
+		
+		ResultSet r = stmt.executeQuery(sql);		
+		
+		int id = 0;
+		String nome = null, url = null;
+		
+		if(r != null && r.next()){
+            id = r.getInt("id");
+			nome = r.getString("nome");
+			url = r.getString("img");
+        }			
+		
+		conexao.close();
+		
+		Professor professor = new Professor(id, nome, url);
+		
+		return professor;
+	}
 }

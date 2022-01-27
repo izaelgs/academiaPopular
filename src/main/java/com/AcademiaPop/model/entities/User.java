@@ -52,6 +52,11 @@ public class User {
 		this.img = img;
 	}
 	
+	public User(String nome, String img) {			
+		this.nome = nome;
+		this.img = img;
+	}
+	
 	public User(int modulo,int status, int id, String login, String senha, String email, String telefone, String nome, String cpf, String img) {	
 		this.status = status;
 		this.id = id;

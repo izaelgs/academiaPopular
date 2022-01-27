@@ -170,7 +170,7 @@ window.onload = function up() {
     if(semanas_c == 0){
         document.getElementById("alunos").innerHTML +=                    
                     "<h3>Não Foram Encontrados Alunos Para <em>"+dia_hoje+"</em></h3>"+
-                    "<p>faça a inscrição dos exercícios no painel exercícios ou peça para seu professor fazer pra vc seu otario</p>"  
+                    "<p>faça a inscrição dos exercícios no painel do seu aluno ou peça para ele mesmo fazer pra vc seu otario</p>"  
     }  
 
     if(user.img){

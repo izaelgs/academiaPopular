@@ -22,10 +22,10 @@ public class ProfessorController {
 		return new Professor("login.professorDAO", "senha_profedao", "email@professorbrabo", "27654231453", "pRofesorAnofabeto", "7556453419");
 	}
 	
-	@GetMapping("/{id}")
-	public Professor obterProfessor(@PathVariable int id) throws SQLException {
-		Professor professor = ProfessorDAO.getProfessor(id);
-		System.out.println("id: "+ id +"; aluno: "+ professor.nome);
+	@GetMapping("/aluno/{id}")
+	public Professor obterProfessorAluno(@PathVariable int id) throws SQLException {
+		Professor professor = ProfessorDAO.getProfessorAluno(id);
+		System.out.println("id: "+ id +"; professor: "+ professor.nome);
 		return professor;
 	}
 	
