@@ -18,6 +18,51 @@ function getAluno(id_aluno){
     return request.responseText
 }
 
+function submitExercicio(id_dia){
+    let str_form = "form_exercicio_"+id_dia
+    let str_exercicio = "exercicio_"+id_dia
+    let formulario = document.getElementById(str_form);
+
+    let request = new XMLHttpRequest()
+
+    let titulo = formulario.titulo.value
+    let descricao = formulario.desc.value
+    let serie = formulario.serie.value
+    console.log("titulo: "+titulo+", descricao: "+descricao+", serie: "+serie)
+    
+    let url = "http://localhost:8080/serie/exercicio/insere/"+serie
+    console.log(url)
+    request.open("POST", url, false)
+    request.setRequestHeader('Content-Type', 'application/json')
+    request.send(JSON.stringify({
+        "titulo": titulo,
+        "descricao": descricao
+    }))
+
+    formulario.titulo.value = '';
+    formulario.desc.value = '';
+    formulario.serie.value = 0;
+    document.getElementById(str_exercicio).innerHTML += "<hr><b>"+titulo+"</b><br> "+descricao
+    if(request.responseText){
+        alert("adicionei essa merda")
+    }else{
+        alert("vo adicionar essa merda não, ta maluko")
+
+    }
+}
+
+function toogle_form_dia(dia){
+    let str_exercicio = "add_exercicio_"+dia
+    console.log("string: "+str_exercicio)
+
+    var x = document.getElementById(str_exercicio);
+    if (x.style.display === "none") {
+      x.style.display = "block";
+    } else {
+      x.style.display = "none";
+    }
+}
+
 
 window.onload = function up() { 
 
@@ -43,6 +88,7 @@ window.onload = function up() {
         dias = semana.dias
         data_aluno = getAluno(semana.id_aluno)
         aluno = JSON.parse(data_aluno)
+        let dias_c = ""
         if(aluno.img){
             img_aluno = aluno.img
         }else{
@@ -61,7 +107,7 @@ window.onload = function up() {
                             "<div class=\"d-flex flex-column\"> <span class=\"followers\">Followers</span> <span class=\"number2\">980</span> </div>"+
                             "<div class=\"d-flex flex-column\"> <span class=\"rating\">Rating</span> <span class=\"number3\">8.9</span> </div>"+
                         "</div>"+
-                        "<div class=\"button mt-2 d-flex flex-row align-items-center\"> <button class=\"btn btn-sm btn-outline-primary w-100\"data-toggle=\"modal\" data-target=\"#aluno_modal_"+aluno.id+"\">Chat</button> <button class=\"btn btn-sm btn-primary w-100 ml-2\"data-toggle=\"modal\" data-target=\"#aluno_modal_"+aluno.id+"\">Vizualizar</button> </div>"+
+                        "<div class=\"button mt-2 d-flex flex-row align-items-center\"> <button class=\"btn btn-sm btn-outline-primary w-100\"data-toggle=\"modal\" data-target=\"#aluno_modal_"+aluno.id+"\">Chat</button> <button class=\"btn btn-sm btn-primary w-100 ml-2\"data-toggle=\"modal\" data-target=\"#aluno_modal_"+aluno.id+"\">Vizualizar</button> </div>"+                    
                     "</div>"+
                 "</div>"+
             "</div>"+
@@ -139,6 +185,7 @@ window.onload = function up() {
 
             let serie_str = "";
             let exercicio_str = "";
+            let select_series = "";
 
             series.forEach(serie =>{
                 dia_descricao = serie.descricao
@@ -151,6 +198,9 @@ window.onload = function up() {
                 dia_exercicios.forEach(exercicio_o=>{
                     exercicio_str += "<b>"+exercicio_o.titulo+"</b><br> "+exercicio_o.descricao+"<hr>"
                 })
+
+                select_series += "<option value=\""+serie.id+"\">"+dia_titulo+"</option>"
+                
             });
     
             document.getElementById(aluno.id).innerHTML += 
@@ -160,8 +210,32 @@ window.onload = function up() {
                         "</div>"+
                         "<div class=\"modal-body bg-light rounded-bottom\">"+
                             "<h4>Exercícios</h4>"+
-                            "<p>"+exercicio_str+"</p>"+
-                            "<button class=\"btn btn-sm btn-outline-primary w-100\">Adicionar</button>"+
+                            "<p id=\"exercicio_"+dia.id+"\">"+exercicio_str+"</p>"+
+                            "<div id=\"add_exercicio_"+dia.id+"\" style=\"display:none\">"+
+                                "<form id=\"form_exercicio_"+dia.id+"\" name=\"novo_exercicio\" action=\"\">"+
+                                    "<div class=\"form-row\">"+
+                                        "<div class=\"form-group col-md-7\">"+
+                                            "<label for=\"titulo\">Titulo</label>"+
+                                            "<input type=\"text\" class=\"form-control\" id=\"titulo\" name=\"titulo\" value=\"titulo\">"+
+                                        "</div>"+
+                                        "<div class=\"form-group col-md-5\">"+
+                                            "<label for=\"serie\">Serie</label>"+
+                                            "<select id=\"serie\" class=\"form-control\">"+
+                                                "<option value=\"0\" selected>Criar Nova Série</option>"+
+                                                select_series+
+                                            "</select>"+
+                                        "</div>"+
+                                        "<div class=\"form-group col-md-12\">"+
+                                            "<label for=\"desc\">Descrição</label>"+
+                                            "<input type=\"text\" class=\"form-control\" id=\"desc\" placeholder=\"descreva aqui essa merda de exercicio\">"+
+                                        "</div>"+
+                                        "<div class=\"form-group col-md-12\">"+
+                                            "<button class=\"btn btn-sm btn-primary w-100\" onclick=\"submitExercicio("+dia.id+")\" type=\"button\">Salvar</button>"+
+                                        "</div>"+                                        
+                                    "</div>"+
+                                "</form>"+
+                            "</div>"+
+                            "<button class=\"btn btn-sm btn-outline-primary w-100\"onclick=\"toogle_form_dia("+dia.id+")\">Adicionar</button>"+
                         "</div>"+                        
                     "</div>"                           
         });         

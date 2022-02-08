@@ -1,7 +1,7 @@
 package com.AcademiaPop.model.entities;
 
 public class Professor extends User{	
-	int id;
+	public int id;
 	int id_user_professor;
 	
 	public Professor() {
@@ -12,8 +12,8 @@ public class Professor extends User{
 		super(login, senha, email, telefone, nome, cpf);		
 	}
 	
-	public Professor(int id, String nome, String url) {
-		super(nome, url);
+	public Professor(int id, int id_user,String nome, String url) {
+		super(id_user,nome, url);
 		this.id = id;
 	}
 	

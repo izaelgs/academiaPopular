@@ -1,6 +1,8 @@
 package com.AcademiaPop.controller;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,6 +22,19 @@ public class ProfessorController {
 	@GetMapping(path="/qualquer")
 	public Professor obterProfessor() {
 		return new Professor("login.professorDAO", "senha_profedao", "email@professorbrabo", "27654231453", "pRofesorAnofabeto", "7556453419");
+	}
+	
+	@GetMapping(path="/recomendados")
+	public List<Professor> obterRecomendados() throws SQLException {
+		List<Professor> professores = ProfessorDAO.getProfessorList();
+		List<Professor> retorno = new ArrayList<Professor>();
+		for(Professor p : professores){
+            System.out.println("id: "+p.id);
+            Professor p_retorno = new Professor(p.id, p.getId_user(), 0, null, null, null, null, p.nome,null, p.img);
+            retorno.add(p_retorno);
+        }
+		//System.out.println("o id desse professor é: "+professores.get(1).id);
+		return retorno;
 	}
 	
 	@GetMapping("/aluno/{id}")

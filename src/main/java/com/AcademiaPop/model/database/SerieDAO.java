@@ -57,6 +57,44 @@ public class SerieDAO {
 		
 	}
 	
+	public static boolean insertSerieExercicio(Exercicio e, int id_serie) throws SQLException {
+		
+		boolean auth = false;
+		
+		try {
+			Connection conexao = Factory.getConexao();
+			
+			String sql = "INSERT into exercicio(titulo, descricao) VALUES(?, ?)";
+			
+			PreparedStatement stmt = conexao.prepareStatement(sql);
+			stmt.setString(1, e.titulo);
+			stmt.setString(2, e.descricao);
+			stmt.execute();
+			conexao.close();
+			System.out.println("Exercicio inserido com sucesso");
+			
+
+			Connection conexao2 = Factory.getConexao();
+			String insertControle = "INSERT into controle_serie(id_serie, id_ex) VALUES(?, (SELECT max(id) FROM exercicio))";
+			
+			PreparedStatement controle = conexao2.prepareStatement(insertControle);
+			controle.setInt(1, id_serie);			
+			controle.execute();
+			
+			System.out.println("controle inserido com sucesso2");
+			 
+			conexao2.close();
+			
+			auth = true;
+			
+			return auth;
+		} catch (Exception e2) {
+			return auth;
+		}
+		
+		
+	}
+	
 	public static void insertSerieExercicio(Serie s) throws SQLException {
 		Connection conexao = Factory.getConexao();
 		

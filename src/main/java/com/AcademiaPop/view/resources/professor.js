@@ -10,6 +10,6 @@ if(sessionStorage.user != undefined){
         window.location.href = "../"
     }
 }else{
-    alert("erro de sessão")
+    alert("Sessão Expirada")
     window.location.href = "../"
 }

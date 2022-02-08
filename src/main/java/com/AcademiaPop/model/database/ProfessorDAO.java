@@ -5,6 +5,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.AcademiaPop.model.entities.Professor;
 
@@ -78,7 +80,7 @@ public class ProfessorDAO {
 	public static Professor getProfessorAluno(int id_q) throws SQLException {
 		Connection conexao = Factory.getConexao();		
 		
-		String sql = "SELECT p.id, u.nome, u.img\r\n"
+		String sql = "SELECT p.id, u.nome, u.img, u.id as id_user\r\n"
 				+ "FROM user u INNER \r\n"
 				+ "JOIN professor p ON u.id = p.id_user \r\n"
 				+ "JOIN semana s ON p.id = s.id_professor\r\n"
@@ -90,19 +92,59 @@ public class ProfessorDAO {
 		
 		ResultSet r = stmt.executeQuery(sql);		
 		
-		int id = 0;
+		int id = 0,id_user = 0;
 		String nome = null, url = null;
 		
 		if(r != null && r.next()){
             id = r.getInt("id");
+            id_user = r.getInt("id_user");
 			nome = r.getString("nome");
 			url = r.getString("img");
         }			
 		
 		conexao.close();
 		
-		Professor professor = new Professor(id, nome, url);
+		Professor professor = new Professor(id, id_user,nome, url);
 		
 		return professor;
+	}
+	
+	public static List<Professor> getProfessorList() throws SQLException {
+		Connection conexao = Factory.getConexao();		
+		
+		String sql = "SELECT p.id, u.nome, u.img, u.id as id_user\r\n"
+				+ "FROM user u INNER \r\n"
+				+ "JOIN professor p ON u.id = p.id_user \r\n"
+				+ "WHERE u.status = 1;";
+		
+		Statement stmt1 = conexao.createStatement();	
+		
+		
+		ResultSet r = stmt1.executeQuery(sql);		
+		
+		List<Professor> professores = new ArrayList<Professor>();
+
+		
+		int id = 0,id_user = 0;
+		String nome = null, url = null;
+		
+		while(r != null && r.next()){
+			id = r.getInt("id");
+			id_user = r.getInt("id_user");
+			nome = r.getString("nome");
+			url = r.getString("img");
+            
+			Professor p = new Professor(id, id_user,nome, url);
+            
+            professores.add(p);
+            
+    		//System.out.println("o id desse professor é: "+id+", ou: "+p.id);
+
+        }			
+		
+		conexao.close();
+		System.out.println("o id desse professor é: "+professores.get(0).id);
+
+		return professores;
 	}
 }

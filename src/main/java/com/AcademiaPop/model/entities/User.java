@@ -52,7 +52,7 @@ public class User {
 		this.img = img;
 	}
 	
-	public User(String nome, String img) {			
+	public User(int id,String nome, String img) {			
 		this.nome = nome;
 		this.img = img;
 	}

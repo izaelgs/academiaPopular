@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import com.AcademiaPop.model.entities.Dia;
 import com.AcademiaPop.model.entities.Semana;
@@ -45,6 +46,35 @@ public class SemanaDAO {
 		
 		System.out.println("semana atualizada com sucesso");
 		conexao.close();
+	}
+	
+	public static boolean updateProfessorSemana(Map<String,Integer> valores) throws SQLException {
+		if(checkSemanaAluno(valores.get("id_a"))) {
+			Connection conexao = Factory.getConexao();
+			System.out.println(valores.get("id_a"));
+			String sql = "UPDATE semana SET id_professor = ? WHERE id_aluno = ?";
+			
+			PreparedStatement stmt = conexao.prepareStatement(sql);
+					
+			stmt.setInt(1, valores.get("id_p"));
+			stmt.setInt(2, valores.get("id_a"));
+		
+			return !stmt.execute();
+		}else {
+			Connection conexao = Factory.getConexao();
+			System.out.println(valores.get("id_a"));
+			String sql = "INSERT INTO semana(id_professor, id_aluno) VALUES(?,?)";
+			
+			PreparedStatement stmt = conexao.prepareStatement(sql);
+					
+			stmt.setInt(1, valores.get("id_p"));
+			stmt.setInt(2, valores.get("id_a"));
+			
+			return !stmt.execute();
+
+		}
+		
+				
 	}
 	
 	public static Semana getSemana(int id_q) throws SQLException {
@@ -114,6 +144,46 @@ public class SemanaDAO {
 		System.out.println(semana.getId());
 
 		return semana;
+	}
+	
+	public static boolean checkSemanaAluno(int id_q) throws SQLException {
+		
+		boolean auth = false;
+
+		Connection conexao = Factory.getConexao();		
+		
+		String sql = "SELECT id FROM semana WHERE id_aluno =" + id_q;
+		
+		Statement stmt = conexao.createStatement();	
+		
+		
+		ResultSet r = stmt.executeQuery(sql);		
+		
+		int id = 0,id_aluno = 0,id_professor = 0,idDia = 0,id_serie = 0,dia= 0;		
+        List<Dia> dias = new ArrayList<Dia>();
+
+		while(r != null && r.next()){
+            id = r.getInt("id");
+            
+    		List<Serie> series = new ArrayList<Serie>();
+
+            Serie serie = SerieDAO.getSerieExercicios(id_serie);
+            
+            series.add(serie);
+            
+            Dia dia_o = new Dia(idDia,id_serie,id,dia,series);
+    		System.out.println(idDia);
+            dias.add(dia_o);
+        }			
+		
+		conexao.close();
+								
+		Semana semana = new Semana(id, id_aluno, id_professor,dias);
+		if(semana.getId() > 0) {
+			auth = true;
+		}
+
+		return auth;
 	}
 	
 	public static List<Semana> getSemanaAlunos(int id_q) throws SQLException {

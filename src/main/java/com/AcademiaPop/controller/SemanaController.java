@@ -2,6 +2,7 @@ package com.AcademiaPop.controller;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,6 +23,11 @@ public class SemanaController {
 	public Semana getSemana(@PathVariable int id) throws SQLException {
 		Semana semana = SemanaDAO.getSemana(id);
 		return semana;
+	}
+	
+	@GetMapping("/teste/{id}")
+	public Boolean checkSemanaAluno(@PathVariable int id) throws SQLException {
+		return SemanaDAO.checkSemanaAluno(id);
 	}
 	
 	@GetMapping("/aluno/{id}")
@@ -46,5 +52,11 @@ public class SemanaController {
 	public Semana updateSemana(@RequestBody Semana semana) throws SQLException {
 		SemanaDAO.updateSemana(semana);
 		return semana;
+	}
+
+	
+	@PutMapping("/update/professor")
+	public Boolean updateProfessorSemana(@RequestBody Map<String,Integer> valores) throws SQLException {
+		return SemanaDAO.updateProfessorSemana(valores);
 	}
 }
