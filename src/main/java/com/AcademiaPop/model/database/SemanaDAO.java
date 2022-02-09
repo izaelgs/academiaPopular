@@ -190,7 +190,7 @@ public class SemanaDAO {
 		Connection conexao = Factory.getConexao();		
 		
 		String sql = "SELECT s.id,s.id_professor,s.id_aluno,d.id as idDia, d.id_serie,d.dia\r\n"
-				+ "FROM semana s JOIN dia d ON s.id = d.id_semana\r\n"
+				+ "FROM semana s LEFT JOIN dia d ON s.id = d.id_semana\r\n"
 				+ "WHERE s.id_professor =" + id_q+ " ORDER BY d.dia";
 		
 		Statement stmt = conexao.createStatement();	

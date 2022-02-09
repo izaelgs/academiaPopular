@@ -87,7 +87,7 @@ window.onload = function up() {
             "<div class=\"card-body\">"+
                 "<h5 class=\"card-title\">"+dia_ref+"</h5>"+
                 serie_str+
-                "<a href=\"#\" class=\"btn btn-primary open-moral\" data-toggle=\"modal\" data-target=\"#ex_modal_"+dia.id+"\">Vizualizar</a>"+
+                "<a href=\"#\" class=\"btn btn-primary open-moral\" data-toggle=\"modal\" data-target=\"#ex_modal_"+dia.id+"\">Visualizar</a>"+
             "</div>"+
             "</div>"
 
