@@ -1,3 +1,5 @@
+let dias_semana = ["Domingo", "Segunda-Feira", "Terça-Feira", "Quarta-Feira", "Quinta-Feira", "Sexta-Feira", "Sábado"];
+
 function getSemanas(id_professor){
     
     let request = new XMLHttpRequest()
@@ -51,11 +53,85 @@ function submitExercicio(id_dia){
     }
 }
 
+function submitDia(aluno,id_semana){
+    let str_form = "form_dia_"+aluno
+    let formulario = document.getElementById(str_form);
+
+    let request = new XMLHttpRequest()
+    let dia = formulario.dia.value
+    console.log("id_semana: "+id_semana+", dia: "+dia)
+    
+    let url = "http://localhost:8080/dia/insert"
+    console.log(url)
+    request.open("POST", url, false)
+    request.setRequestHeader('Content-Type', 'application/json')
+    request.send(JSON.stringify({
+        "id_semana": id_semana,
+        "dia": dia
+    }))
+
+    if(request.responseText){
+        let dia_ref = dias_semana[dia];    
+        formulario.dia = dia+1;
+        document.getElementById(aluno).innerHTML = document.getElementById(aluno).innerHTML += 
+        "<div class=\"container shadow-lg\">"+
+            "<div class=\"modal-heade bg-secondary rounded-top p-2 text-white\">"+
+                "<h3 class=\"modal-title\">"+dia_ref+"</h3>"+                            
+            "</div>"+
+            "<div class=\"modal-body bg-light rounded-bottom\">"+
+                "<h4>Exercícios</h4>"+
+                "<p id=\"exercicio_"+dia+"\"></p>"+
+                "<div id=\"add_exercicio_"+dia+"\" style=\"display:none\">"+
+                    "<form id=\"form_exercicio_"+dia+"\" name=\"novo_exercicio\" action=\"\">"+
+                        "<div class=\"form-row\">"+
+                            "<div class=\"form-group col-md-7\">"+
+                                "<label for=\"titulo\">Titulo</label>"+
+                                "<input type=\"text\" class=\"form-control\" id=\"titulo\" name=\"titulo\" value=\"titulo\">"+
+                            "</div>"+
+                            "<div class=\"form-group col-md-5\">"+
+                                "<label for=\"serie\">Serie</label>"+
+                                "<select id=\"serie\" class=\"form-control\">"+
+                                    "<option value=\"0\" selected>Criar Nova Série</option>"+
+                                "</select>"+
+                            "</div>"+
+                            "<div class=\"form-group col-md-12\">"+
+                                "<label for=\"desc\">Descrição</label>"+
+                                "<input type=\"text\" class=\"form-control\" id=\"desc\" placeholder=\"descreva aqui essa merda de exercicio\">"+
+                            "</div>"+
+                            "<div class=\"form-group col-md-12\">"+
+                                "<button class=\"btn btn-sm btn-primary w-100\" onclick=\"submitExercicio("+dia+")\" type=\"button\">Salvar</button>"+
+                            "</div>"+                                        
+                        "</div>"+
+                    "</form>"+
+                "</div>"+
+                "<button class=\"btn btn-sm btn-outline-primary w-100\"onclick=\"toogle_form_dia("+dia+")\">Adicionar</button>"+
+            "</div>"+                        
+        "</div>" 
+    
+        alert("adicionei essa merda")
+    }else{
+        alert("vo adicionar essa merda não, ta maluko")
+
+    }
+}
+
 function toogle_form_dia(dia){
     let str_exercicio = "add_exercicio_"+dia
     console.log("string: "+str_exercicio)
 
     var x = document.getElementById(str_exercicio);
+    if (x.style.display === "none") {
+      x.style.display = "block";
+    } else {
+      x.style.display = "none";
+    }
+}
+
+function toogle_add_dia(aluno){
+    let str_dia = "add_dia_"+aluno
+    console.log("string: "+str_dia)
+
+    var x = document.getElementById(str_dia);
     if (x.style.display === "none") {
       x.style.display = "block";
     } else {
@@ -79,89 +155,125 @@ window.onload = function up() {
     semanas = JSON.parse(data)
     let semanas_c = 0;
     let d = new Date();
-    let weekday = d.getDay();
-    let dias_semana = ["Domingo", "Segunda-Feira", "Terça-Feira", "Quarta-Feira", "Quinta-Feira", "Sexta-Feira", "Sábado"];
+    let weekday = d.getDay();    
     let dia_hoje = dias_semana[weekday];
+
+    let id_aluno_bkp = 0;
 
     semanas.forEach(semana => {    
         semanas_c++
         dias = semana.dias
         data_aluno = getAluno(semana.id_aluno)
         aluno = JSON.parse(data_aluno)
-        let dias_c = ""
         if(aluno.img){
             img_aluno = aluno.img
         }else{
             img_aluno = "https://i.pinimg.com/originals/ff/a0/9a/ffa09aec412db3f54deadf1b3781de2a.png"
         }
-        
-        document.getElementById("alunos").innerHTML +=        
-        "<div class=\"container mt-5 d-flex justify-content-center card col-md-6\">"+
-            "<div class=\"card p-3\">"+
-                "<div class=\"d-flex align-items-center\">"+
-                    "<div class=\"image \"> <img src=\""+img_aluno+"\" class=\"rounded\" width=\"155\"> </div>"+
-                    "<div class=\"ml-3 w-100\">"+
-                        "<h4 class=\"mb-0 mt-0\">"+aluno.nome+"</h4> <span>Senior Journalist</span>"+
-                        "<div class=\"p-2 mt-2 bg-primary d-flex justify-content-between rounded text-white stats\">"+
-                            "<div class=\"d-flex flex-column\"> <span class=\"articles\">Nível</span> <span class=\"number1\">38</span> </div>"+
-                            "<div class=\"d-flex flex-column\"> <span class=\"followers\">Followers</span> <span class=\"number2\">980</span> </div>"+
-                            "<div class=\"d-flex flex-column\"> <span class=\"rating\">Rating</span> <span class=\"number3\">8.9</span> </div>"+
+
+        if(id_aluno_bkp != aluno.id){
+            document.getElementById("alunos").innerHTML +=        
+            "<div class=\"container mt-5 d-flex justify-content-center card col-md-6\">"+
+                "<div class=\"card p-3\">"+
+                    "<div class=\"d-flex align-items-center\">"+
+                        "<div class=\"image \"> <img src=\""+img_aluno+"\" class=\"rounded\" width=\"155\"> </div>"+
+                        "<div class=\"ml-3 w-100\">"+
+                            "<h4 class=\"mb-0 mt-0\">"+aluno.nome+"</h4> <span>Senior Journalist</span>"+
+                            "<div class=\"p-2 mt-2 bg-primary d-flex justify-content-between rounded text-white stats\">"+
+                                "<div class=\"d-flex flex-column\"> <span class=\"articles\">Nível</span> <span class=\"number1\">38</span> </div>"+
+                                "<div class=\"d-flex flex-column\"> <span class=\"followers\">Followers</span> <span class=\"number2\">980</span> </div>"+
+                                "<div class=\"d-flex flex-column\"> <span class=\"rating\">Rating</span> <span class=\"number3\">8.9</span> </div>"+
+                            "</div>"+
+                            "<div class=\"button mt-2 d-flex flex-row align-items-center\"> <button class=\"btn btn-sm btn-outline-primary w-100\"data-toggle=\"modal\" data-target=\"#aluno_modal_"+aluno.id+"\">Chat</button> <button class=\"btn btn-sm btn-primary w-100 ml-2\"data-toggle=\"modal\" data-target=\"#aluno_modal_"+aluno.id+"\">Vizualizar</button> </div>"+                    
                         "</div>"+
-                        "<div class=\"button mt-2 d-flex flex-row align-items-center\"> <button class=\"btn btn-sm btn-outline-primary w-100\"data-toggle=\"modal\" data-target=\"#aluno_modal_"+aluno.id+"\">Chat</button> <button class=\"btn btn-sm btn-primary w-100 ml-2\"data-toggle=\"modal\" data-target=\"#aluno_modal_"+aluno.id+"\">Vizualizar</button> </div>"+                    
                     "</div>"+
                 "</div>"+
-            "</div>"+
-        "</div>"
+            "</div>"
 
+            select_dias = ''
 
-        document.getElementById("modais").innerHTML +=                    
-        "<div class=\"modal fade\" id=\"aluno_modal_"+aluno.id+"\" tabindex=\"-1\" role=\"dialog\">"+
-        "<div class=\"modal-dialog modal-lg\" role=\"document\">"+
-            "<div class=\"modal-content\">"+
-                "<div class=\"modal-header\">"+
-                    "<h3 class=\"modal-title\">"+aluno.nome+"</h3>"+
-                    "<button type=\"button\" class=\"close\" data-dismiss=\"modal\">"+
-                        "<span>&times;</span>"+
-                    "</button>"+
+            for(i = 0;i <= 6; i++){            
+                select_dias += `<option value=\"${i}\" id="${aluno.id}_${i}">${dias_semana[i]}</option>`            
+            }
+            
+            document.getElementById("modais").innerHTML +=                    
+            "<div class=\"modal fade\" id=\"aluno_modal_"+aluno.id+"\" tabindex=\"-1\" role=\"dialog\">"+
+            "<div class=\"modal-dialog modal-lg\" role=\"document\">"+
+                "<div class=\"modal-content\">"+
+                    "<div class=\"modal-header\">"+
+                        "<h3 class=\"modal-title\">"+aluno.nome+"</h3>"+
+                        "<button type=\"button\" class=\"close\" data-dismiss=\"modal\">"+
+                            "<span>&times;</span>"+
+                        "</button>"+
+                    "</div>"+
+                    "<div class=\"modal-body\">"+
+                        "<h4>Dias</h4>"+
+                        "<div id=\""+aluno.id+"\"></div>"+
+                        "<br><button class=\"btn btn-sm btn-outline-primary w-100\" onclick=\"toogle_add_dia("+aluno.id+")\">Adicionar Dia</button>"+
+                        "<div id=\"add_dia_"+aluno.id+"\" style=\"display:none\">"+
+                                    "<form id=\"form_dia_"+aluno.id+"\" name=\"novo_dia\" action=\"\">"+
+                                        "<div class=\"form-row\">"+
+                                            "<div class=\"form-group col-md-12\">"+
+                                                "<label for=\"dia\">Dia da Semana</label>"+
+                                                "<select id=\"dia\" name=\"dia\" class=\"form-control\">"+
+                                                    select_dias+
+                                                "</select>"+
+                                            "</div>"+
+                                            "<div class=\"form-group col-md-12\">"+
+                                                "<button id=\"submit_dia_"+aluno.id+"\" class=\"btn btn-sm btn-primary w-100\" onclick=\"submitDia("+aluno.id+","+semana.id+")\" type=\"button\">Salvar</button>"+
+                                            "</div>"+                                        
+                                        "</div>"+
+                                    "</form>"+
+                                "</div>"+
+                    "</div>"+
+                    "<div class=\"modal-footer\">"+
+                        "<button type=\"button\" class=\"btn btn-danger\" data-dismiss=\"modal\">Fechar</button>"+
+                    "</div>"+
                 "</div>"+
-                "<div class=\"modal-body\">"+
-                    "<h4>Dias</h4>"+
-                    "<div id=\""+aluno.id+"\"></div>"+
-                "</div>"+
-                "<div class=\"modal-footer\">"+
-                    "<button type=\"button\" class=\"btn btn-danger\" data-dismiss=\"modal\">Fechar</button>"+
-                "</div>"+
-            "</div>"+
-        "</div> "+  
-        "</div>"
+            "</div> "+  
+            "</div>"
 
-        document.getElementById("chat").innerHTML +=                    
-        "<div class=\"modal fade\" id=\"chat_modal_"+aluno.id+"\" tabindex=\"-1\" role=\"dialog\">"+
-        "<div class=\"modal-dialog modal-lg\" role=\"document\">"+
-            "<div class=\"modal-content\">"+
-                "<div class=\"modal-header\">"+
-                    "<h3 class=\"modal-title\">"+aluno.nome+"</h3>"+
-                    "<button type=\"button\" class=\"close\" data-dismiss=\"modal\">"+
-                        "<span>&times;</span>"+
-                    "</button>"+
-                "</div>"+
-                "<div class=\"modal-body\">"+
-                    "<h4>Exercícios</h4>"+
-                    "<p>"+aluno+"</p>"+
-                "</div>"+
-                "<div class=\"modal-footer\">"+
-                    "<button type=\"button\" class=\"btn btn-danger\" data-dismiss=\"modal\">Fechar</button>"+
-                "</div>"+
-            "</div>"+
-        "</div> "+  
-        "</div>"
+            document.getElementById("chat").innerHTML +=                    
+                    "<div class=\"modal fade\" id=\"chat_modal_"+aluno.id+"\" tabindex=\"-1\" role=\"dialog\">"+
+                    "<div class=\"modal-dialog modal-lg\" role=\"document\">"+
+                        "<div class=\"modal-content\">"+
+                            "<div class=\"modal-header\">"+
+                                "<h3 class=\"modal-title\">"+aluno.nome+"</h3>"+
+                                "<button type=\"button\" class=\"close\" data-dismiss=\"modal\">"+
+                                    "<span>&times;</span>"+
+                                "</button>"+
+                            "</div>"+
+                            "<div class=\"modal-body\">"+
+                                "<h4>Exercícios</h4>"+
+                                "<p>"+aluno+"</p>"+
+                            "</div>"+
+                            "<div class=\"modal-footer\">"+
+                                "<button type=\"button\" class=\"btn btn-danger\" data-dismiss=\"modal\">Fechar</button>"+
+                            "</div>"+
+                        "</div>"+
+                    "</div> "+  
+                    "</div>"
+            
+            id_aluno_bkp = aluno.id
+            console.log('botei o alunobkp: '+id_aluno_bkp)
+        }
+
+        
         dias.forEach(dia => {
             
+            document.getElementById(`${aluno.id}_${dia.dia}`).disabled = true
+            if(dia.dia+1 <= 6){
+                document.getElementById(`${aluno.id}_${dia.dia+1}`).selected = true
+            }else{
+                document.getElementById(`submit_dia_${aluno.id}`).disabled = true
+            }
+            
+
+
             series = dia.series
             let dia_ref = dias_semana[dia.dia];
 
             if(dia.dia == weekday){
-                dias_c ++;            
     
                 series.forEach(serie => {
                     dia_descricao = serie.descricao

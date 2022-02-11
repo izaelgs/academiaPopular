@@ -16,12 +16,11 @@ public class DiaDAO {
 	public static void insertDia(Dia d) throws SQLException {
 		Connection conexao = Factory.getConexao();					
 					
-		String sql = "INSERT into dia(id_serie, id_semana, dia) VALUES(?, ?, ?)";
+		String sql = "INSERT into dia(id_semana, dia) VALUES(?, ?)";
 				
 		PreparedStatement stmt = conexao.prepareStatement(sql);
-		stmt.setInt(1, d.id_serie);
-		stmt.setInt(2, d.id_semana);
-		stmt.setInt(3, d.dia);
+		stmt.setInt(1, d.id_semana);
+		stmt.setInt(2, d.dia);
 		
 		stmt.execute();
 		

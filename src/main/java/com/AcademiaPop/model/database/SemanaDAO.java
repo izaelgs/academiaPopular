@@ -191,19 +191,20 @@ public class SemanaDAO {
 		
 		String sql = "SELECT s.id,s.id_professor,s.id_aluno,d.id as idDia, d.id_serie,d.dia\r\n"
 				+ "FROM semana s LEFT JOIN dia d ON s.id = d.id_semana\r\n"
-				+ "WHERE s.id_professor =" + id_q+ " ORDER BY d.dia";
+				+ "WHERE s.id_professor =" + id_q+ " ORDER BY s.id_aluno,d.dia";
 		
 		Statement stmt = conexao.createStatement();	
 		
 		
 		ResultSet r = stmt.executeQuery(sql);		
 		
-		int id = 0,id_aluno = 0,id_professor = 0,idDia = 0,id_serie = 0,dia= 0;		
+		int id = 0,id_aluno = 0,id_professor = 0,idDia = 0,id_serie = 0,dia= 0,c = 0, c1 = 0;		
         List<Semana> semanas = new ArrayList<Semana>();
         List<Dia> dias_c = new ArrayList<Dia>();
-
+        
+        
 		while(r != null && r.next()){
-			boolean auth = r.getInt("id") != id? true: false;
+			boolean auth = r.getInt("id_aluno") != id_aluno? true: false;
 						
             id = r.getInt("id");
             id_aluno = r.getInt("id_aluno");
@@ -219,32 +220,38 @@ public class SemanaDAO {
             series.add(serie);
             
             Dia dia_o = new Dia(idDia,id_serie,id,dia,series);
+            
 			if(auth) {
-				//if(dia_o.id_semana == id) {
-		        	List<Dia> dias = new ArrayList<Dia>();
-
-		            dias.add(dia_o);
+					System.out.println("\n  ");
+					System.out.println("primeira linha do aluno: "+id_aluno);
+					
+					List<Dia> dias_aluno = new ArrayList<Dia>();
+					dias_aluno.add(dia_o);
 		            dias_c.add(dia_o);
 
-					Semana semana = new Semana(id, id_aluno, id_professor,dias);
-					semanas.add(semana);
-		    		System.out.println("serie: "+id_serie);
-	
-		    		System.out.println("dia: "+dia_o.getId());
-	    		//}else {}
+					Semana semana = new Semana(id, id_aluno, id_professor,dias_aluno);
+					semanas.add(semana);			
+		    		
+		    		c1 = c;
 				
 			}else {
+				System.out.println("segunda linha do aluno: "+id_aluno);
 		        List<Dia> dias = new ArrayList<Dia>();
-				dias.add(dias_c.get(dias_c.size()-1));
-
+	            
+		        for(int i = c1; i < c; i++) {
+		        	System.out.println("adicionei dia "+i+" da semana");
+		        	if(dia_o.dia != dias_c.get(i).dia) {
+		        		dias.add(dias_c.get(i));
+		        	}
+		        	
+		        }				
+		        dias_c.add(dia_o);
 	            dias.add(dia_o);
 				Semana semana = new Semana(id, id_aluno, id_professor,dias);
 				semanas.remove(semanas.size()-1);
 				semanas.add(semana);
-	    		System.out.println("dias: "+semana.dias.size());
-
-				//System.out.println("semana: "+semana.getId());
 			}
+			c++;
         }			
 		
 		conexao.close();

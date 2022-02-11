@@ -16,12 +16,12 @@ import com.AcademiaPop.model.entities.Dia;
 @RestController
 @RequestMapping("/dia")
 public class DiaController {
-	/*
+	
 	@GetMapping(path="/{id}")
 	public Dia getDia(@PathVariable int id) throws SQLException {
 		Dia dia = DiaDAO.getDia(id);
 		return dia;
-	}*/
+	}
 	
 	@GetMapping(path="/aluno/{a}/{d}")
 	public Dia getDiaSerie(@PathVariable int a,@PathVariable int d) throws SQLException {
