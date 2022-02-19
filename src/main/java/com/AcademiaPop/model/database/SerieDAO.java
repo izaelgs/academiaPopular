@@ -8,23 +8,50 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.AcademiaPop.model.entities.Dia;
 import com.AcademiaPop.model.entities.Exercicio;
 import com.AcademiaPop.model.entities.Serie;
 
 public class SerieDAO {
-	public static void insertSerie(Serie s) throws SQLException {
-		Connection conexao = Factory.getConexao();					
+	public static Boolean insertSerie(Serie s) throws SQLException {
+		try {
+			Connection conexao = Factory.getConexao();					
 					
-		String sql = "INSERT into serie(titulo, descricao) VALUES(?, ?)";
-				
-		PreparedStatement stmt = conexao.prepareStatement(sql);
-		stmt.setString(1, s.titulo);
-		stmt.setString(2, s.descricao);
+			String sql = "INSERT into serie(titulo, descricao) VALUES(?, ?)";
+					
+			PreparedStatement stmt = conexao.prepareStatement(sql);
+			stmt.setString(1, s.titulo);
+			stmt.setString(2, s.descricao);
+			
+			stmt.execute();
+			
+			System.out.println("Serie inserido com sucesso");
+			conexao.close();
+			
+			return true;
+		} catch (Exception e) {
+			// TODO: handle exception
+			return false;
+		}
 		
-		stmt.execute();
 		
-		System.out.println("Serie inserido com sucesso");
-		conexao.close();
+	}
+	
+	public static int insertDiaSerie(Dia d) throws SQLException {
+		Serie s = new Serie("Nova Serie","descricao");
+		
+		if(insertSerie(s)) {
+			s.setId(getUltimaSerie());
+			d.id_serie = s.getId();
+			if(DiaDAO.insertDiaSerie(d)) {
+				return s.getId();
+			}else {
+				return -2;
+			}
+		}else {
+			return -1;
+		}
+		
 		
 	}
 	
@@ -161,14 +188,35 @@ public class SerieDAO {
 		return serie;
 	}
 	
+	public static int getUltimaSerie() throws SQLException {
+		Connection conexao = Factory.getConexao();		
+		
+		String sql = "SELECT MAX(id) as id FROM serie";
+		
+		Statement stmt = conexao.createStatement();	
+		
+		
+		ResultSet r = stmt.executeQuery(sql);		
+		
+		int id = 0;		
+		
+		if(r != null && r.next()){
+            id = r.getInt("id");		
+        }			
+		
+		conexao.close();
+		
+		return id;
+	}
+	
 	public static Serie getSerieExercicios(int id_q) throws SQLException {
 		
 		List<Exercicio> exercicios = new ArrayList<Exercicio>();
 		Connection conexao = Factory.getConexao();		
 		
 		String sql = "SELECT s.id,s.titulo,s.descricao,e.id as id_e,e.titulo as titulo_e, e.descricao as desc_e\r\n"
-				+ "FROM serie s JOIN controle_serie cs ON s.id = cs.id_serie \r\n"
-				+ "JOIN exercicio e ON cs.id_ex = e.id WHERE s.id =" + id_q;
+				+ "FROM serie s LEFT JOIN controle_serie cs ON s.id = cs.id_serie \r\n"
+				+ "LEFT JOIN exercicio e ON cs.id_ex = e.id WHERE s.id =" + id_q;
 		
 		Statement stmt = conexao.createStatement();	
 		

@@ -13,19 +13,86 @@ import com.AcademiaPop.model.entities.Serie;
 
 public class DiaDAO {
 	
-	public static void insertDia(Dia d) throws SQLException {
-		Connection conexao = Factory.getConexao();					
+	public static Boolean insertDia(Dia d) throws SQLException {
+		try {
+			
+			Connection conexao = Factory.getConexao();					
+			System.out.println("dia: "+d.dia+", semana: "+d.id_semana);
+			
+			String sql = "INSERT into dia(id_semana, dia) VALUES(?, ?)";
 					
-		String sql = "INSERT into dia(id_semana, dia) VALUES(?, ?)";
-				
-		PreparedStatement stmt = conexao.prepareStatement(sql);
-		stmt.setInt(1, d.id_semana);
-		stmt.setInt(2, d.dia);
+			PreparedStatement stmt = conexao.prepareStatement(sql);
+			stmt.setInt(1, d.id_semana);
+			stmt.setInt(2, d.dia);
+			
+			stmt.execute();
+			
+			System.out.println("Dia inserido com sucesso");
+			conexao.close();
+			
+			return true;
+		} catch (Exception e) {
+			System.out.println("deu errado mané");
+			// TODO: handle exception
+			System.out.println(e);
+			return false;
+		}
 		
-		stmt.execute();
 		
-		System.out.println("Dia inserido com sucesso");
-		conexao.close();
+	}
+	
+	public static Boolean insertDiaSerie(Dia d) throws SQLException {
+		try {
+			
+			Connection conexao = Factory.getConexao();					
+			System.out.println("dia: "+d.dia+", semana: "+d.id_semana);
+			
+			String sql = "INSERT into dia(id_semana, dia,id_serie) VALUES(?, ?, ?)";
+					
+			PreparedStatement stmt = conexao.prepareStatement(sql);
+			stmt.setInt(1, d.id_semana);
+			stmt.setInt(2, d.dia);
+			stmt.setInt(3, d.id_serie);
+			
+			stmt.execute();
+			
+			System.out.println("Dia inserido com sucesso");
+			conexao.close();
+			
+			return true;
+		} catch (Exception e) {
+			System.out.println("deu errado mané");
+			// TODO: handle exception
+			System.out.println(e);
+			return false;
+		}
+		
+		
+	}
+	
+	public static int insertDiaSerieNova(Dia d) throws SQLException {
+		try {
+			
+			Serie s = new Serie("Nova Serie","descricao");
+			
+			if(SerieDAO.insertSerie(s)) {
+				s.setId(SerieDAO.getUltimaSerie());
+				d.id_serie = s.getId();
+				if(DiaDAO.insertDiaSerie(d)) {
+					return getUltimoDia(1);
+				}else {
+					return -1;
+				}
+			}else {
+				return -2;
+			}
+		} catch (Exception e) {
+			
+			System.out.println(e);
+			
+			return -3;
+			// TODO: handle exception
+		}
 		
 	}
 	
@@ -71,6 +138,27 @@ public class DiaDAO {
 		Dia dia_o = new Dia(id, id_serie, id_semana, dia);
 		
 		return dia_o;
+	}
+	
+	public static int getUltimoDia(int id_q) throws SQLException {
+		Connection conexao = Factory.getConexao();		
+		
+		String sql = "SELECT MAX(id) as id FROM dia";
+		
+		Statement stmt = conexao.createStatement();	
+		
+		
+		ResultSet r = stmt.executeQuery(sql);		
+		
+		int id = 0;		
+		
+		if(r != null && r.next()){
+            id = r.getInt("id");			
+        }			
+		
+		conexao.close();
+		
+		return id;
 	}
 	
 	public static Dia getDiaSerie(int aluno,int id_q) throws SQLException {

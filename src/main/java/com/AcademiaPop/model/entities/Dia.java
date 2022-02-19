@@ -14,12 +14,22 @@ public class Dia {
 		
 	}
 	
+	public Dia(int id_semana, int dia) {
+		this.id_semana = id_semana;
+		this.dia = dia;
+	}
+	
+	
 	public Dia(int id_serie, int id_semana, int dia) {		
 		this.id_serie = id_serie;
 		this.id_semana = id_semana;
 		this.dia = dia;
 	}
 	
+	public void setId(int id) {
+		this.id = id;
+	}
+
 	public Dia(int id, int id_serie, int id_semana, int dia) {		
 		this.id = id;
 		this.id_serie = id_serie;

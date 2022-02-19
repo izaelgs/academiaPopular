@@ -35,6 +35,12 @@ public class DiaController {
 		return "dia inserido com sucesso";
 	}
 	
+	@PostMapping("/insert/serie")
+	public int insertDiaSerie(@RequestBody Dia dia) throws SQLException{
+		int id_dia = DiaDAO.insertDiaSerieNova(dia);		
+		return id_dia;
+	}
+	
 	@PutMapping("/update")
 	public String updateData(@RequestBody Dia dia) throws SQLException {
 		DiaDAO.updateDia(dia);

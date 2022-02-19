@@ -20,7 +20,20 @@ function getAluno(id_aluno){
     return request.responseText
 }
 
-function submitExercicio(id_dia){
+function createSerie(id_semana,dia){
+    let url = "http://localhost:8080/serie/insert/dia/"
+    let request = new XMLHttpRequest()
+    console.log(url)
+    request.open("POST", url, false)
+    request.setRequestHeader('Content-Type', 'application/json')
+    request.send(JSON.stringify({
+        "id_semana": id_semana,
+        "dia": dia
+    }))
+    return request.responseText
+}
+
+function submitExercicio(id_dia,id_semana){
     let str_form = "form_exercicio_"+id_dia
     let str_exercicio = "exercicio_"+id_dia
     let formulario = document.getElementById(str_form);
@@ -30,7 +43,9 @@ function submitExercicio(id_dia){
     let titulo = formulario.titulo.value
     let descricao = formulario.desc.value
     let serie = formulario.serie.value
-    console.log("titulo: "+titulo+", descricao: "+descricao+", serie: "+serie)
+    if(serie == 0){
+        serie = createSerie(id_semana,id_dia)
+    }
     
     let url = "http://localhost:8080/serie/exercicio/insere/"+serie
     console.log(url)
@@ -59,9 +74,8 @@ function submitDia(aluno,id_semana){
 
     let request = new XMLHttpRequest()
     let dia = formulario.dia.value
-    console.log("id_semana: "+id_semana+", dia: "+dia)
     
-    let url = "http://localhost:8080/dia/insert"
+    let url = "http://localhost:8080/dia/insert/serie"
     console.log(url)
     request.open("POST", url, false)
     request.setRequestHeader('Content-Type', 'application/json')
@@ -70,7 +84,8 @@ function submitDia(aluno,id_semana){
         "dia": dia
     }))
 
-    if(request.responseText){
+    if(request.responseText && (request.responseText > 0)){
+        id_dia = request.responseText
         let dia_ref = dias_semana[dia];    
         formulario.dia = dia+1;
         document.getElementById(aluno).innerHTML = document.getElementById(aluno).innerHTML += 
@@ -80,9 +95,9 @@ function submitDia(aluno,id_semana){
             "</div>"+
             "<div class=\"modal-body bg-light rounded-bottom\">"+
                 "<h4>Exercícios</h4>"+
-                "<p id=\"exercicio_"+dia+"\"></p>"+
-                "<div id=\"add_exercicio_"+dia+"\" style=\"display:none\">"+
-                    "<form id=\"form_exercicio_"+dia+"\" name=\"novo_exercicio\" action=\"\">"+
+                "<p id=\"exercicio_"+id_dia+"\"></p>"+
+                "<div id=\"add_exercicio_"+id_dia+"\" style=\"display:none\">"+
+                    "<form id=\"form_exercicio_"+id_dia+"\" name=\"novo_exercicio\" action=\"\">"+
                         "<div class=\"form-row\">"+
                             "<div class=\"form-group col-md-7\">"+
                                 "<label for=\"titulo\">Titulo</label>"+
@@ -99,12 +114,12 @@ function submitDia(aluno,id_semana){
                                 "<input type=\"text\" class=\"form-control\" id=\"desc\" placeholder=\"descreva aqui essa merda de exercicio\">"+
                             "</div>"+
                             "<div class=\"form-group col-md-12\">"+
-                                "<button class=\"btn btn-sm btn-primary w-100\" onclick=\"submitExercicio("+dia+")\" type=\"button\">Salvar</button>"+
+                                "<button class=\"btn btn-sm btn-primary w-100\" onclick=\"submitExercicio("+id_dia+""+id_semana+")\" type=\"button\">Salvar</button>"+
                             "</div>"+                                        
                         "</div>"+
                     "</form>"+
                 "</div>"+
-                "<button class=\"btn btn-sm btn-outline-primary w-100\"onclick=\"toogle_form_dia("+dia+")\">Adicionar</button>"+
+                "<button class=\"btn btn-sm btn-outline-primary w-100\"onclick=\"toogle_form_dia("+id_dia+")\">Adicionar</button>"+
             "</div>"+                        
         "</div>" 
     
@@ -117,7 +132,6 @@ function submitDia(aluno,id_semana){
 
 function toogle_form_dia(dia){
     let str_exercicio = "add_exercicio_"+dia
-    console.log("string: "+str_exercicio)
 
     var x = document.getElementById(str_exercicio);
     if (x.style.display === "none") {
@@ -129,7 +143,6 @@ function toogle_form_dia(dia){
 
 function toogle_add_dia(aluno){
     let str_dia = "add_dia_"+aluno
-    console.log("string: "+str_dia)
 
     var x = document.getElementById(str_dia);
     if (x.style.display === "none") {
@@ -160,7 +173,7 @@ window.onload = function up() {
 
     let id_aluno_bkp = 0;
 
-    semanas.forEach(semana => {    
+    semanas.forEach(semana => { 
         semanas_c++
         dias = semana.dias
         data_aluno = getAluno(semana.id_aluno)
@@ -172,6 +185,7 @@ window.onload = function up() {
         }
 
         if(id_aluno_bkp != aluno.id){
+
             document.getElementById("alunos").innerHTML +=        
             "<div class=\"container mt-5 d-flex justify-content-center card col-md-6\">"+
                 "<div class=\"card p-3\">"+
@@ -255,12 +269,11 @@ window.onload = function up() {
                     "</div>"
             
             id_aluno_bkp = aluno.id
-            console.log('botei o alunobkp: '+id_aluno_bkp)
         }
 
-        
-        dias.forEach(dia => {
-            
+        console.log("dias: "+dias[0].id)
+        if(dias[0].id != 0){
+            dias.forEach(dia => {
             document.getElementById(`${aluno.id}_${dia.dia}`).disabled = true
             if(dia.dia+1 <= 6){
                 document.getElementById(`${aluno.id}_${dia.dia+1}`).selected = true
@@ -306,7 +319,6 @@ window.onload = function up() {
                 dia_exercicios = serie.exercicios           
                 
                 serie_str += "<p class=\"card-text\"><b><em>"+dia_titulo+"</em></b><br>"+dia_descricao+"</p>"
-                console.log(dia_exercicios)
                 dia_exercicios.forEach(exercicio_o=>{
                     exercicio_str += "<b>"+exercicio_o.titulo+"</b><br> "+exercicio_o.descricao+"<hr>"
                 })
@@ -342,7 +354,7 @@ window.onload = function up() {
                                             "<input type=\"text\" class=\"form-control\" id=\"desc\" placeholder=\"descreva aqui essa merda de exercicio\">"+
                                         "</div>"+
                                         "<div class=\"form-group col-md-12\">"+
-                                            "<button class=\"btn btn-sm btn-primary w-100\" onclick=\"submitExercicio("+dia.id+")\" type=\"button\">Salvar</button>"+
+                                            "<button class=\"btn btn-sm btn-primary w-100\" onclick=\"submitExercicio("+dia.id+","+semana.id+")\" type=\"button\">Salvar</button>"+
                                         "</div>"+                                        
                                     "</div>"+
                                 "</form>"+
@@ -350,7 +362,9 @@ window.onload = function up() {
                             "<button class=\"btn btn-sm btn-outline-primary w-100\"onclick=\"toogle_form_dia("+dia.id+")\">Adicionar</button>"+
                         "</div>"+                        
                     "</div>"                           
-        });         
+        });
+        }
+                 
     });
 
     if(semanas_c == 0){

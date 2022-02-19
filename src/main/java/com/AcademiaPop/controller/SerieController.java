@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.AcademiaPop.model.database.SerieDAO;
+import com.AcademiaPop.model.entities.Dia;
 import com.AcademiaPop.model.entities.Exercicio;
 import com.AcademiaPop.model.entities.Serie;
 
@@ -53,6 +54,11 @@ public class SerieController {
 	public boolean insertSerieExercicio(@RequestBody Exercicio exercicio, @PathVariable int id) throws SQLException {
 		SerieDAO.insertSerieExercicio(exercicio,id);
 		return true;
+	}
+	
+	@RequestMapping(method = RequestMethod.POST, value = "/insert/dia")
+	public int insertDiaSerie(@RequestBody Dia d) throws SQLException {
+		return SerieDAO.insertDiaSerie(d);		
 	}
 	
 	@PutMapping("/update")
